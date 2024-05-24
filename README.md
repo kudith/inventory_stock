@@ -1,17 +1,17 @@
-# Aplikasi Inventaris Next.js
+# Inventory App Next.js
 
 Ini adalah proyek [Next.js](https://nextjs.org/) yang dibuat dengan [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Memulai
+## Start
 
-### Prasyarat
+### Prequest
 
 Pastikan Anda telah menginstal:
 
 - Node.js (disarankan: versi LTS terbaru)
 - npm, yarn, pnpm, atau bun (pilih salah satu pengelola paket)
 
-### Instalasi
+### Install
 
 Pertama, kloning repositori:
 
@@ -20,7 +20,7 @@ git clone https://github.com/username/inventory_stock.git
 cd inventory_stock
 ```
 
-instal dependensi:
+install dependensi:
 
 ```bash
 npm install
@@ -32,7 +32,7 @@ pnpm install
 bun install
 ```
 
-### Menjalankan Server Pengembangan
+### Menjalankan Server di localhost
 
 Setelah menginstal dependensi, jalankan server pengembangan:
 
