@@ -1,76 +1,73 @@
-# Next.js Inventory App
+# Aplikasi Inventaris Next.js
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Ini adalah proyek [Next.js](https://nextjs.org/) yang dibuat dengan [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Memulai
 
-### Prerequisites
+### Prasyarat
 
-Ensure you have the following installed:
+Pastikan Anda telah menginstal:
 
-- Node.js (recommended: latest LTS version)
-- npm, yarn, pnpm, or bun (choose one package manager)
+- Node.js (disarankan: versi LTS terbaru)
+- npm, yarn, pnpm, atau bun (pilih salah satu pengelola paket)
 
-### Installation
+### Instalasi
 
-First, clone the repository:
+Pertama, kloning repositori:
 
 ```bash
 git clone https://github.com/username/inventory_stock.git
 cd inventory_stock
 ```
 
-Then, install the dependencies using your preferred package manager:
+instal dependensi:
 
 ```bash
 npm install
-# or
+# atau
 yarn install
-# or
+# atau
 pnpm install
-# or
+# atau
 bun install
 ```
 
-### Running the Development Server
+### Menjalankan Server Pengembangan
 
-After installing the dependencies, run the development server:
+Setelah menginstal dependensi, jalankan server pengembangan:
 
 ```bash
 npm run dev
-# or
+# atau
 yarn dev
-# or
+# atau
 pnpm dev
-# or
+# atau
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) dengan browser Anda untuk melihat hasilnya.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Rute API
 
-### API Routes
+Rute API dapat diakses di [http://localhost:3000/api/hello](http://localhost:3000/api/hello). Endpoint ini dapat diedit di `pages/api/hello.js`.
 
-API routes can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Direktori `pages/api` dipetakan ke `/api/*`. File dalam direktori ini diperlakukan sebagai [rute API](https://nextjs.org/docs/api-routes/introduction) alih-alih halaman React.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Proyek ini menggunakan [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) untuk mengoptimalkan dan memuat Inter, font khusus dari Google secara otomatis.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Pelajari Lebih Lanjut
 
-## Learn More
+Untuk mempelajari lebih lanjut tentang Next.js, lihat sumber daya berikut:
 
-To learn more about Next.js, take a look at the following resources:
+- [Dokumentasi Next.js](https://nextjs.org/docs) - pelajari tentang fitur dan API Next.js.
+- [Belajar Next.js](https://nextjs.org/learn) - tutorial interaktif Next.js.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Anda dapat memeriksa [repositori GitHub Next.js](https://github.com/vercel/next.js/) - umpan balik dan kontribusi Anda diterima!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Menerapkan di Vercel
 
-## Deploy on Vercel
+Cara termudah untuk menerapkan aplikasi Next.js Anda adalah menggunakan [Platform Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) dari pembuat Next.js.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Lihat [dokumentasi penerapan Next.js](https://nextjs.org/docs/deployment) kami untuk detail lebih lanjut.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-Salin dan tempel teks di atas ke dalam file `README.md` di root direktori proyek Anda. README ini memberikan panduan lengkap bagi kolaborator Anda tentang cara menginstal dan menjalankan proyek Anda. Jika ada informasi tambahan yang perlu ditambahkan, Anda bisa memperbarui README ini sesuai kebutuhan.
