@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function createDummyData() {
   try {
     // Membuat data dummy untuk model Barang
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
       await prisma.barang.create({
         data: {
           kode: faker.string.sample(5), // Menggunakan faker untuk menghasilkan kode barang UUID
@@ -14,7 +14,7 @@ async function createDummyData() {
           stok: faker.number.int(100), // Menggunakan faker untuk menghasilkan jumlah stok acak
           harga: faker.finance.accountNumber(), // Menggunakan faker untuk menghasilkan harga acak
           tanggal_masuk: faker.date.anytime(),
-          id_kategori: faker.number.int({ min: 3, max: 5 }), // Menggunakan faker untuk menghasilkan ID kategori acak
+          id_kategori: faker.number.int({ min: 1, max: 4 }), // Menggunakan faker untuk menghasilkan ID kategori acak
           id_merk: faker.number.int({ min: 1, max: 10 }), // Menggunakan faker untuk menghasilkan ID merk acak
         },
       });

@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 
 const InventoryTable = ({ items }) => {
   const [itemList, setItemList] = useState(items);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    setItemList(items); // Update itemList when items prop changes
+    setItemList(items);
   }, [items]);
 
   const handleDelete = async (id_barang) => {
@@ -18,7 +19,6 @@ const InventoryTable = ({ items }) => {
       });
 
       if (response.ok) {
-        // Remove the deleted item from the state
         setItemList(itemList.filter(item => item.id_barang !== id_barang));
       } else {
         console.error('Failed to delete item');
@@ -27,46 +27,66 @@ const InventoryTable = ({ items }) => {
       console.error('Failed to delete item', error);
     }
   };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    const filteredItems = items.filter(item =>
+        item.nama.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setItemList(filteredItems);
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+  };
+
   return (
-    <div className="overflow-x-auto rounded-lg">
-      <table className="min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr className="bg-gray-800 text-white">
-            <th className="px-6 py-3 text-left">Kode</th>
-            <th className="px-6 py-3 text-left">Nama</th>
-            <th className="px-6 py-3 text-left">Supplier</th>
-            <th className="px-6 py-3 text-left">Kategori</th>
-            <th className="px-6 py-3 text-left">Merk</th>
-            <th className="px-6 py-3 text-left">Stok</th>
-            <th className="px-6 py-3 text-left">Harga</th>
-            <th className="px-6 py-3 text-left">Tanggal Masuk</th>
-            <th className="px-6 py-3 text-left">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {itemList.map((item) => (
-            <tr key={item.id_barang} className="bg-gray-50 border-b border-gray-200">
-              <td className="px-6 py-4 whitespace-nowrap">{item.kode}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.nama}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.supplier.nama}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.kategori.nama}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.merk.nama}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.stok}</td>
-              <td className={`px-6 py-4 whitespace-nowrap ${item.harga >= 0 ? 'text-green-500' : 'text-red-500'}`}>{item.harga.toString()}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{new Date(item.tanggal_masuk).toLocaleDateString()}</td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <button
-                  className="text-red-600 hover:text-red-800"
-                  onClick={() => handleDelete(item.id_barang)}
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="rounded-lg overflow-hidden">
+        <div className="flex justify-between items-center mb-4">
+          <input
+              type="text"
+              placeholder="Search by name..."
+              className="px-4 py-2 border border-gray-300 focus:outline-none focus:border-blue-500 rounded-lg"
+              value={searchTerm}
+              onChange={handleSearch}
+          />
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Barang</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Merk</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+            {itemList.map((item) => (
+                <tr key={item.id_barang} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.id_barang}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.nama}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.stok}</td>
+                  <td className={`px-6 py-4 whitespace-nowrap text-sm ${item.harga >= 0 ? 'text-green-500' : 'text-red-500'}`}>{formatCurrency(item.harga)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.merk.nama}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.kategori.nama}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => handleDelete(item.id_barang)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+            ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
   );
 };
 

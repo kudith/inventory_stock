@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Form, Input, Select, Button, message } from 'antd';
+
+const { Option } = Select;
 
 const AddItemForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -17,164 +20,99 @@ const AddItemForm = ({ onSubmit }) => {
 
   useEffect(() => {
     fetch('/api/dropdowns')
-      .then((response) => response.json())
-      .then((data) => {
-        setMerkOptions(data.merks);
-        setKategoriOptions(data.kategoris);
-        setSupplierOptions(data.suppliers);
-      })
-      .catch((error) => console.error('Error fetching dropdown data:', error));
+        .then((response) => response.json())
+        .then((data) => {
+          setMerkOptions(data.merks);
+          setKategoriOptions(data.kategoris);
+          setSupplierOptions(data.suppliers);
+        })
+        .catch((error) => console.error('Error fetching dropdown data:', error));
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (name, value) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (values) => {
     const formDataWithDate = {
-      ...formData,
+      ...values,
       tanggal_masuk: new Date().toISOString().substr(0, 10),
     };
-    onSubmit(formDataWithDate);
-    setFormData({
-      kode: '',
-      nama: '',
-      supplier: '',
-      kategori: '',
-      merk: '',
-      stok: '',
-      harga: '',
-    });
+    const success = await onSubmit(formDataWithDate);
+    if (success) {
+      message.error('Gagal menambahkan barang. Silakan coba lagi.');
+    } else {
+      message.success('Barang berhasil ditambahkan');
+      // Reset formulir
+      setFormData({
+        kode: '',
+        nama: '',
+        supplier: '',
+        kategori: '',
+        merk: '',
+        stok: '',
+        harga: '',
+      });
+    }
   };
+
   return (
-    <div className="max-w-md mx-auto bg-white rounded-md shadow-md overflow-hidden">
-      <form onSubmit={handleSubmit} className="px-4 py-6 space-y-4">
-        <div>
-          <label htmlFor="kode" className="block text-sm font-medium text-gray-700">
-            Kode
-          </label>
-          <input
-            type="text"
-            name="kode"
-            id="kode"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            value={formData.kode}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="nama" className="block text-sm font-medium text-gray-700">
-            Nama
-          </label>
-          <input
-            type="text"
-            name="nama"
-            id="nama"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            value={formData.nama}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="supplier" className="block text-sm font-medium text-gray-700">
-            Supplier
-          </label>
-          <select
-            name="supplier"
-            id="supplier"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            value={formData.supplier}
-            onChange={handleChange}
-          >
-            <option value="">Pilih Supplier</option>
-            {supplierOptions.map((supplier) => (
-              <option key={supplier.id_supplier} value={supplier.id_supplier}>
-                {supplier.nama}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="kategori" className="block text-sm font-medium text-gray-700">
-            Kategori
-          </label>
-          <select
-            name="kategori"
-            id="kategori"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            value={formData.kategori}
-            onChange={handleChange}
-          >
-            <option value="">Pilih Kategori</option>
-            {kategoriOptions.map((kategori) => (
-              <option key={kategori.id_kategori} value={kategori.id_kategori}>
-                {kategori.nama}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="merk" className="block text-sm font-medium text-gray-700">
-            Merk
-          </label>
-          <select
-            name="merk"
-            id="merk"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            value={formData.merk}
-            onChange={handleChange}
-          >
-            <option value="">Pilih Merk</option>
-            {merkOptions.map((merk) => (
-              <option key={merk.id_merk} value={merk.id_merk}>
-                {merk.nama}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="stok" className="block text-sm font-medium text-gray-700">
-            Stok
-          </label>
-          <input
-            type="number"
-            name="stok"
-            id="stok"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            value={formData.stok}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="harga" className="block text-sm font-medium text-gray-700">
-            Harga
-          </label>
-          <input
-            type="number"
-            name="harga"            id="harga"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            value={formData.harga}
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-          >
-            Tambah Barang
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="max-w-md mx-auto rounded-md shadow-xl border-2 mt-20 overflow-hidden p-4">
+        <Form onFinish={handleSubmit} layout="vertical" initialValues={formData}>
+          <Form.Item label="Kode" name="kode" rules={[{ required: true, message: 'Masukkan kode' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Nama" name="nama" rules={[{ required: true, message: 'Masukkan nama' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Supplier" name="supplier" rules={[{ required: true, message: 'Pilih supplier' }]}>
+            <Select dropdownClassName={"custom-dropdown"}> {/* Menambahkan properti style dengan zIndex yang lebih tinggi */}
+              <Option value="">Pilih Supplier</Option>
+              {supplierOptions.map((supplier) => (
+                  <Option key={supplier.id_supplier} value={supplier.id_supplier}>
+                    {supplier.nama}
+                  </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Kategori" name="kategori" rules={[{ required: true, message: 'Pilih kategori' }]}>
+            <Select dropdownClassName={"custom-dropdown"}>
+              <Option value="">Pilih Kategori</Option>
+              {kategoriOptions.map((kategori) => (
+                  <Option key={kategori.id_kategori} value={kategori.id_kategori}>
+                    {kategori.nama}
+                  </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Merk" name="merk" rules={[{ required: true, message: 'Pilih merk' }]}>
+            <Select dropdownClassName={"custom-dropdown"}>
+              <Option value="">Pilih Merk</Option>
+              {merkOptions.map((merk) => (
+                  <Option key={merk.id_merk} value={merk.id_merk}>
+                    {merk.nama}
+                  </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Stok" name="stok" rules={[{ required: true, message: 'Masukkan stok' }]}>
+            <Input type="number" />
+          </Form.Item>
+          <Form.Item label="Harga" name="harga" rules={[{ required: true, message: 'Masukkan harga' }]}>
+            <Input type="number" />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" style={{ marginRight: '8px' }}>
+              Tambah Barang
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
   );
 };
 
 export default AddItemForm;
-
