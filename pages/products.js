@@ -7,12 +7,15 @@ import { Box, CircularProgress, Container, Typography, Grid, Button, Dialog, Dia
 import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
 import Sidebar from '../components/Sidebar';
 import DashboardHeader from '../components/DashboardHeader';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import AddItemForm from '/components/AddItemFom';
-import InventApp from "@/components/inventApp";
-import { NextUIProvider } from "@nextui-org/react";
+import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
+import AddItemForm from '../components/AddItemFom';  // Pastikan path dan nama file benar
+import InventApp from '../components/inventApp';  // Pastikan path dan nama file benar
+import { NextUIProvider } from '@nextui-org/react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import TransaksiMasukTable from "@/components/TransaksiMasukTable";
 
-const Dashboard = () => {
+const Products = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -30,7 +33,13 @@ const Dashboard = () => {
         return res.data;
     });
 
-    const mutation = useMutation(
+    const { data: transaksiMasukData, error: transaksiMasukError, isLoading: transaksiMasukLoading } = useQuery('transaksiMasuk', async () => {
+        const res = await axios.get('/api/transaksi_masuk');
+        return res.data;
+    });
+
+
+    const addItemMutation = useMutation(
         async (newItem) => {
             const res = await axios.post('/api/barang', newItem);
             return res.data;
@@ -39,16 +48,18 @@ const Dashboard = () => {
             onSuccess: () => {
                 queryClient.invalidateQueries('barang');
                 refetch();
+                toast.success('Barang berhasil ditambahkan');
             },
             onError: (error) => {
                 console.error('Error adding item:', error);
+                toast.error('Gagal menambahkan barang. Silakan coba lagi.');
             },
         }
     );
 
     const handleAddItem = async (itemData) => {
         try {
-            await mutation.mutateAsync(itemData);
+            await addItemMutation.mutateAsync(itemData);
             setIsAddingItem(false);
         } catch (error) {
             console.error('Error adding item:', error);
@@ -87,27 +98,10 @@ const Dashboard = () => {
                                 </Box>
                             ) : (
                                 <>
-                                    <Button
-                                        onClick={() => setIsAddingItem(true)}
-                                        variant="contained"
-                                        color="primary"
-                                        startIcon={<AddIcon />}
-                                        className=""
-                                        size="large"
-                                        sx={{
-                                            backgroundColor: '#1976d2',
-                                            ':hover': {
-                                                backgroundColor: '#115293',
-                                            },
-                                            padding: '10px 20px',
-                                            fontWeight: 'bold',
-                                            borderRadius: '12px',
-                                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                                        }}
-                                    >
-                                        Add Item
-                                    </Button>
-                                    <InventApp data={data} />
+                                    <InventApp
+                                        data={data}
+                                        onAddItemClick={() => setIsAddingItem(true)}  // Pass handler to InventApp
+                                    />
                                 </>
                             )}
                         </Grid>
@@ -141,8 +135,9 @@ const Dashboard = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <ToastContainer />
         </NextUIProvider>
     );
 };
 
-export default Dashboard;
+export default Products;

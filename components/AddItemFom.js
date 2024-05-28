@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Form, Input, Select, Button, message } from 'antd';
-
-const { Option } = Select;
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { toast } from 'react-toastify';
 
 const AddItemForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -29,89 +28,121 @@ const AddItemForm = ({ onSubmit }) => {
         .catch((error) => console.error('Error fetching dropdown data:', error));
   }, []);
 
-  const handleChange = (name, value) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formDataWithDate = {
-      ...values,
+      ...formData,
       tanggal_masuk: new Date().toISOString().substr(0, 10),
     };
     const success = await onSubmit(formDataWithDate);
-    if (success) {
-      message.error('Gagal menambahkan barang. Silakan coba lagi.');
-    } else {
-      message.success('Barang berhasil ditambahkan');
-      // Reset formulir
-      setFormData({
-        kode: '',
-        nama: '',
-        supplier: '',
-        kategori: '',
-        merk: '',
-        stok: '',
-        harga: '',
-      });
-    }
+
   };
 
   return (
-      <div className="max-w-md mx-auto rounded-md shadow-xl border-2 mt-20 overflow-hidden p-4">
-        <Form onFinish={handleSubmit} layout="vertical" initialValues={formData}>
-          <Form.Item label="Kode" name="kode" rules={[{ required: true, message: 'Masukkan kode' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Nama" name="nama" rules={[{ required: true, message: 'Masukkan nama' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Supplier" name="supplier" rules={[{ required: true, message: 'Pilih supplier' }]}>
-            <Select dropdownClassName={"custom-dropdown"}> {/* Menambahkan properti style dengan zIndex yang lebih tinggi */}
-              <Option value="">Pilih Supplier</Option>
+      <Box className="max-w-md mx-auto rounded-md shadow-xl border-2 mt-20 overflow-hidden p-4">
+        <form onSubmit={handleSubmit}>
+          <FormControl fullWidth margin="normal">
+            <TextField
+                label="Kode"
+                name="kode"
+                value={formData.kode}
+                onChange={handleChange}
+                required
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+                label="Nama"
+                name="nama"
+                value={formData.nama}
+                onChange={handleChange}
+                required
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Supplier</InputLabel>
+            <Select
+                label="Supplier"
+                name="supplier"
+                value={formData.supplier}
+                onChange={handleChange}
+                required
+            >
+              <MenuItem value="">Pilih Supplier</MenuItem>
               {supplierOptions.map((supplier) => (
-                  <Option key={supplier.id_supplier} value={supplier.id_supplier}>
+                  <MenuItem key={supplier.id_supplier} value={supplier.id_supplier}>
                     {supplier.nama}
-                  </Option>
+                  </MenuItem>
               ))}
             </Select>
-          </Form.Item>
-
-          <Form.Item label="Kategori" name="kategori" rules={[{ required: true, message: 'Pilih kategori' }]}>
-            <Select dropdownClassName={"custom-dropdown"}>
-              <Option value="">Pilih Kategori</Option>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Kategori</InputLabel>
+            <Select
+                label="Kategori"
+                name="kategori"
+                value={formData.kategori}
+                onChange={handleChange}
+                required
+            >
+              <MenuItem value="">Pilih Kategori</MenuItem>
               {kategoriOptions.map((kategori) => (
-                  <Option key={kategori.id_kategori} value={kategori.id_kategori}>
+                  <MenuItem key={kategori.id_kategori} value={kategori.id_kategori}>
                     {kategori.nama}
-                  </Option>
+                  </MenuItem>
               ))}
             </Select>
-          </Form.Item>
-          <Form.Item label="Merk" name="merk" rules={[{ required: true, message: 'Pilih merk' }]}>
-            <Select dropdownClassName={"custom-dropdown"}>
-              <Option value="">Pilih Merk</Option>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Merk</InputLabel>
+            <Select
+                label="Merk"
+                name="merk"
+                value={formData.merk}
+                onChange={handleChange}
+                required
+            >
+              <MenuItem value="">Pilih Merk</MenuItem>
               {merkOptions.map((merk) => (
-                  <Option key={merk.id_merk} value={merk.id_merk}>
+                  <MenuItem key={merk.id_merk} value={merk.id_merk}>
                     {merk.nama}
-                  </Option>
+                  </MenuItem>
               ))}
             </Select>
-          </Form.Item>
-          <Form.Item label="Stok" name="stok" rules={[{ required: true, message: 'Masukkan stok' }]}>
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item label="Harga" name="harga" rules={[{ required: true, message: 'Masukkan harga' }]}>
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ marginRight: '8px' }}>
-              Tambah Barang
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+                label="Stok"
+                name="stok"
+                type="number"
+                value={formData.stok}
+                onChange={handleChange}
+                required
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+                label="Harga"
+                name="harga"
+                type="number"
+                value={formData.harga}
+                onChange={handleChange}
+                required
+            />
+          </FormControl>
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Tambah Barang
+          </Button>
+        </form>
+      </Box>
   );
 };
 

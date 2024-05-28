@@ -6,7 +6,8 @@ import { faHome, faArchive, faUsers, faExclamation, faBars, faTimes, faChevronDo
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: faHome },
     { name: 'Products', href: '#', icon: faArchive, subItems: [
-            { name: 'Product In', href: '/product/in' },
+            { name: 'Products', href: '/dashboard', },
+            { name: 'Product In', href: '/transaksi_masuk' },
             { name: 'Product Out', href: '/product/out' },
             { name: 'Stock', href: '/stock' }
         ]},

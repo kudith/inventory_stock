@@ -19,7 +19,7 @@ import { PlusIcon } from "./icons/PlusIcon";
 import { VerticalDotsIcon } from "./icons/vertical";
 import { SearchIcon } from "./icons/SearchIcon";
 import { ChevronDownIcon } from "./icons/chv";
-import { columns, statusOptions } from "./data/data";
+import { transaksiMasukColumns as columns } from "./data/data_masuk";
 import { capitalize } from "/utils/utils";
 
 const statusColorMap = {
@@ -28,42 +28,35 @@ const statusColorMap = {
     low_stock: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["id_barang", "nama", "stok", "harga", "merk", "kategori", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["id_transaksi_masuk", "nama_barang", "nama_supplier", "tanggal", "harga_satuan", "jumlah", "total_harga", "actions"];
 
-const InventApp = ({ data, onAddItemClick }) => {
+const TransaksiMasukTable = ({ data, onAddItemClick }) => {
     const [filterValue, setFilterValue] = useState("");
     const [selectedKeys, setSelectedKeys] = useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
-    const [statusFilter, setStatusFilter] = useState(new Set(["all"]));
     const [rowsPerPage, setRowsPerPage] = useState(20);
-    const [sortDescriptor, setSortDescriptor] = useState({ column: "id_barang", direction: "ascending" });
+    const [sortDescriptor, setSortDescriptor] = useState({ column: "id_transaksi_masuk", direction: "ascending" });
     const [page, setPage] = useState(1);
-    const [items, setItems] = useState(data);
+    const [items, setItems] = useState(data || []);
 
     useEffect(() => {
-        setItems(data);
+        setItems(data || []);
     }, [data]);
 
     const hasSearchFilter = Boolean(filterValue);
 
     const headerColumns = useMemo(() => {
         if (visibleColumns === "all") return columns;
-        return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+        return columns.filter((column) => Array.from(visibleColumns).includes(column.id));
     }, [visibleColumns]);
 
     const filteredItems = useMemo(() => {
         let filteredData = [...items];
         if (hasSearchFilter) {
-            filteredData = filteredData.filter((item) => item.nama.toLowerCase().includes(filterValue.toLowerCase()));
-        }
-        if (!statusFilter.has("all")) {
-            filteredData = filteredData.filter((item) => {
-                const stockStatus = item.stok > 10 ? "available" : item.stok > 0 ? "low_stock" : "out_of_stock";
-                return statusFilter.has(stockStatus);
-            });
+            filteredData = filteredData.filter((item) => item.nama_barang.toLowerCase().includes(filterValue.toLowerCase()));
         }
         return filteredData;
-    }, [items, filterValue, statusFilter]);
+    }, [items, filterValue]);
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -84,12 +77,12 @@ const InventApp = ({ data, onAddItemClick }) => {
 
     const handleDelete = useCallback(async (id) => {
         try {
-            const response = await fetch(`/api/barang/${id}`, {
+            const response = await fetch(`/api/transaksi_masuk/${id}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
-                setItems((prevItems) => prevItems.filter(item => item.id_barang !== id));
+                setItems((prevItems) => prevItems.filter(item => item.id_transaksi_masuk !== id));
             } else {
                 console.error('Failed to delete item');
             }
@@ -104,7 +97,7 @@ const InventApp = ({ data, onAddItemClick }) => {
             return;
         }
         try {
-            const response = await fetch(`/api/barang`, {
+            const response = await fetch(`/api/transaksi_masuk`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -113,7 +106,7 @@ const InventApp = ({ data, onAddItemClick }) => {
             });
 
             if (response.ok) {
-                setItems((prevItems) => prevItems.filter(item => !idsToDelete.includes(item.id_barang)));
+                setItems((prevItems) => prevItems.filter(item => !idsToDelete.includes(item.id_transaksi_masuk)));
                 setSelectedKeys(new Set());
             } else {
                 console.error('Failed to delete items');
@@ -126,29 +119,23 @@ const InventApp = ({ data, onAddItemClick }) => {
     const renderCell = useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
-            case "nama":
+            case "nama_barang":
                 return <div>{cellValue}</div>;
-            case "harga":
+            case "harga_satuan":
+            case "total_harga":
                 return <div>{new Intl.NumberFormat('id-ID', {
                     style: 'currency',
                     currency: 'IDR'
                 }).format(cellValue)}</div>;
-            case "merk":
-            case "kategori":
-                return <div>{cellValue.nama}</div>;
-            case "stok":
-                return (
-                    <Chip color={statusColorMap[item.stok > 10 ? "available" : item.stok > 0 ? "low_stock" : "out_of_stock"]}>
-                        {cellValue}
-                    </Chip>
-                );
+            case "tanggal":
+                return <div>{new Date(cellValue).toLocaleDateString('id-ID')}</div>;
             case "actions":
                 return (
                     <Button color="error" onClick={() => {
                         if (selectedKeys.size > 1) {
                             handleBatchDelete();
                         } else {
-                            handleDelete(item.id_barang);
+                            handleDelete(item.id_transaksi_masuk);
                         }
                     }}>
                         Delete
@@ -211,34 +198,6 @@ const InventApp = ({ data, onAddItemClick }) => {
                 <Dropdown>
                     <DropdownTrigger>
                         <Button endContent={<ChevronDownIcon className="text-small"/>} variant="flat">
-                            Status
-                        </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                        disallowEmptySelection
-                        aria-label="Table Columns"
-                        closeOnSelect={false}
-                        selectedKeys={statusFilter}
-                        selectionMode="multiple"
-                        onSelectionChange={setStatusFilter}
-                    >
-                        <DropdownItem key="all" className="capitalize">
-                            All
-                        </DropdownItem>
-                        <DropdownItem key="available" className="capitalize">
-                            Available
-                        </DropdownItem>
-                        <DropdownItem key="low_stock" className="capitalize">
-                            Low Stock
-                        </DropdownItem>
-                        <DropdownItem key="out_of_stock" className="capitalize">
-                            Out of Stock
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-                <Dropdown>
-                    <DropdownTrigger>
-                        <Button endContent={<ChevronDownIcon className="text-small"/>} variant="flat">
                             Columns
                         </Button>
                     </DropdownTrigger>
@@ -251,8 +210,8 @@ const InventApp = ({ data, onAddItemClick }) => {
                         onSelectionChange={setVisibleColumns}
                     >
                         {columns.map((column) => (
-                            <DropdownItem key={column.uid} className="capitalize">
-                                {capitalize(column.name)}
+                            <DropdownItem key={column.id} className="capitalize">
+                                {capitalize(column.label)}
                             </DropdownItem>
                         ))}
                     </DropdownMenu>
@@ -277,17 +236,14 @@ const InventApp = ({ data, onAddItemClick }) => {
                 </div>
             </div>
         );
-    }, [filterValue, statusFilter, visibleColumns, onRowsPerPageChange, items.length, onSearchChange, hasSearchFilter]);
-
-
+    }, [filterValue, visibleColumns, onRowsPerPageChange, items.length, onSearchChange, hasSearchFilter]);
 
     const bottomContent = useMemo(() => {
         return (
             <div className="py-2 px-2 flex justify-between items-center">
                 <span className="w-[30%] text-small text-default-400">
                     {selectedKeys === "all"
-                        ? "All items selected"
-                        : `${selectedKeys.size} of ${filteredItems.length} selected`}
+                        ? "All items selected"                        : `${selectedKeys.size} of ${filteredItems.length} selected`}
                 </span>
                 <Pagination
                     isCompact
@@ -312,7 +268,7 @@ const InventApp = ({ data, onAddItemClick }) => {
 
     return (
         <Table
-            aria-label="Example table with custom cells, pagination and sorting"
+            aria-label="Transaction entry table with custom cells, pagination, and sorting"
             isHeaderSticky
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
@@ -328,17 +284,17 @@ const InventApp = ({ data, onAddItemClick }) => {
             <TableHeader columns={headerColumns}>
                 {(column) => (
                     <TableColumn
-                        key={column.uid}
-                        align={column.uid === "actions" ? "center" : "start"}
+                        key={column.id}
+                        align={column.id === "actions" ? "center" : "start"}
                         allowsSorting={column.sortable}
                     >
-                        {column.name}
+                        {column.label}
                     </TableColumn>
                 )}
             </TableHeader>
             <TableBody emptyContent={"No items found"} items={sortedItems}>
                 {(item) => (
-                    <TableRow key={item.id_barang}>
+                    <TableRow key={item.id_transaksi_masuk}>
                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                     </TableRow>
                 )}
@@ -347,4 +303,5 @@ const InventApp = ({ data, onAddItemClick }) => {
     );
 };
 
-export default InventApp;
+export default TransaksiMasukTable;
+
