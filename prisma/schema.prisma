@@ -85,7 +85,7 @@ model Merk {
 model Barang {
   id_barang     Int      @id @default(autoincrement())
   kode          String   @unique
-  nama          String
+  nama          String   @unique
   id_supplier   Int
   stok          Int
   harga         Decimal

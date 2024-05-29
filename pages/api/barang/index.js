@@ -20,6 +20,16 @@ export default async function handler(req, res) {
     } else if (req.method === 'POST') {
         try {
             const { kode, nama, supplier, kategori, merk, stok, harga } = req.body;
+
+            // Cek apakah nama barang sudah ada
+            const existingBarang = await prisma.barang.findUnique({
+                where: { nama },
+            });
+
+            if (existingBarang) {
+                return res.status(400).json({ error: 'Nama barang sudah ada' });
+            }
+
             const newItem = await prisma.barang.create({
                 data: {
                     kode,

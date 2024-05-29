@@ -180,6 +180,9 @@ CREATE UNIQUE INDEX "Admin_username_key" ON "Admin"("username");
 -- CreateIndex
 CREATE UNIQUE INDEX "Barang_kode_key" ON "Barang"("kode");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Barang_nama_key" ON "Barang"("nama");
+
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 

@@ -6,12 +6,12 @@ import { faHome, faArchive, faUsers, faExclamation, faBars, faTimes, faChevronDo
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: faHome },
     { name: 'Products', href: '#', icon: faArchive, subItems: [
-            { name: 'Products', href: '/dashboard', },
+            { name: 'Products', href: '/products', },
             { name: 'Product In', href: '/transaksi_masuk' },
             { name: 'Product Out', href: '/product/out' },
             { name: 'Stock', href: '/stock' }
         ]},
-    { name: 'Suppliers', href: '/supplier', icon: faUsers },
+    { name: 'Suppliers', href: '/supplier_page', icon: faUsers },
     { name: 'Rejected', href: '/rejected', icon: faExclamation },
 ];
 

@@ -39,15 +39,47 @@ const AddItemForm = ({ onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formDataWithDate = {
-      ...formData,
-      tanggal_masuk: new Date().toISOString().substr(0, 10),
+        ...formData,
+        tanggal_masuk: new Date().toISOString().substr(0, 10),
     };
-    const success = await onSubmit(formDataWithDate);
 
-  };
+    // Panggil endpoint untuk cek apakah nama barang sudah ada
+    const response = await fetch('/api/check-nama', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nama: formData.nama }),
+    });
+
+    if (response.ok) {
+        const { exists } = await response.json();
+        if (exists) {
+            toast.error('Nama barang sudah ada');
+            return;
+        }
+    }
+
+    const success = await onSubmit(formDataWithDate);
+    if (success) {
+        setFormData({
+            kode: '',
+            nama: '',
+            supplier: '',
+            kategori: '',
+            merk: '',
+            stok: '',
+            harga: '',
+        });
+        toast.success('Barang berhasil ditambahkan');
+    } else {
+        // toast.error('Gagal menambahkan barang');
+    }
+};
+
 
   return (
-      <Box className="max-w-md mx-auto rounded-md shadow-xl border-2 mt-20 overflow-hidden p-4">
+      <Box className="max-w-xl mx-auto rounded-md shadow-xl border-2 mt-20 overflow-hidden p-4">
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth margin="normal">
             <TextField

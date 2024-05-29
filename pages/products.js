@@ -1,22 +1,34 @@
-import { useSession } from 'next-auth/react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { useRouter } from 'next/router';
+import {useSession} from 'next-auth/react';
+import {useQuery, useMutation, useQueryClient} from 'react-query';
+import {useRouter} from 'next/router';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Box, CircularProgress, Container, Typography, Grid, Button, Dialog, DialogContent, DialogTitle, DialogActions, IconButton } from '@mui/material';
-import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
+import {useEffect, useState} from 'react';
+import {
+    Box,
+    CircularProgress,
+    Container,
+    Typography,
+    Grid,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogActions,
+    IconButton
+} from '@mui/material';
+import {Add as AddIcon, Close as CloseIcon} from '@mui/icons-material';
 import Sidebar from '../components/Sidebar';
 import DashboardHeader from '../components/DashboardHeader';
-import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
-import AddItemForm from '../components/AddItemFom';  // Pastikan path dan nama file benar
-import InventApp from '../components/inventApp';  // Pastikan path dan nama file benar
-import { NextUIProvider } from '@nextui-org/react';
-import { ToastContainer, toast } from 'react-toastify';
+import {ErrorOutline as ErrorOutlineIcon} from '@mui/icons-material';
+import AddItemForm from '../components/form/AddItemFom';  // Pastikan path dan nama file benar
+import InventApp from '../components/tables/inventApp';  // Pastikan path dan nama file benar
+import {NextUIProvider} from '@nextui-org/react';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import TransaksiMasukTable from "@/components/TransaksiMasukTable";
+import TransaksiMasukTable from "@/components/tables/TransaksiMasukTable";
 
 const Products = () => {
-    const { data: session, status } = useSession();
+    const {data: session, status} = useSession();
     const router = useRouter();
     const queryClient = useQueryClient();
 
@@ -28,15 +40,11 @@ const Products = () => {
         }
     }, [status, router]);
 
-    const { data, error, isLoading, refetch } = useQuery('barang', async () => {
+    const {data, error, isLoading, refetch} = useQuery('barang', async () => {
         const res = await axios.get('/api/barang');
         return res.data;
     });
 
-    const { data: transaksiMasukData, error: transaksiMasukError, isLoading: transaksiMasukLoading } = useQuery('transaksiMasuk', async () => {
-        const res = await axios.get('/api/transaksi_masuk');
-        return res.data;
-    });
 
 
     const addItemMutation = useMutation(
@@ -52,7 +60,7 @@ const Products = () => {
             },
             onError: (error) => {
                 console.error('Error adding item:', error);
-                toast.error('Gagal menambahkan barang. Silakan coba lagi.');
+                // toast.error('Gagal menambahkan barang. Silakan coba lagi.');
             },
         }
     );
@@ -69,9 +77,9 @@ const Products = () => {
     if (status === 'loading' || status === 'unauthenticated') {
         return (
             <div className="flex min-h-screen">
-                <Sidebar />
+                <Sidebar/>
                 <div className="flex-1 flex justify-center items-center">
-                    <CircularProgress />
+                    <CircularProgress/>
                 </div>
             </div>
         );
@@ -79,22 +87,22 @@ const Products = () => {
 
     return (
         <NextUIProvider className="flex">
-            <Sidebar />
+            <Sidebar/>
             <div className="flex-1 flex flex-col">
-                <DashboardHeader />
+                <DashboardHeader/>
                 <Container className="flex-1 mx-auto my-20">
                     <Grid container justifyContent="center" alignItems="center" spacing={2}>
                         <Grid item xs={12}>
                             {isLoading ? (
                                 <Box className="flex justify-center items-center h-60">
-                                    <CircularProgress />
+                                    <CircularProgress/>
                                 </Box>
                             ) : error ? (
                                 <Box className="flex justify-center items-center h-60">
                                     <Typography variant="h6" color="error">
                                         Error loading inventory
                                     </Typography>
-                                    <ErrorOutlineIcon className="ml-1" />
+                                    <ErrorOutlineIcon className="ml-1"/>
                                 </Box>
                             ) : (
                                 <>
@@ -120,22 +128,30 @@ const Products = () => {
                     },
                 }}
             >
-                <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ccc' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Add New Item</Typography>
+                <DialogTitle sx={{
+                    m: 0,
+                    p: 2,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderBottom: '1px solid #ccc'
+                }}>
+                    <Typography variant="h6" sx={{fontWeight: 'bold'}}>Add New Item</Typography>
                     <IconButton onClick={() => setIsAddingItem(false)}>
-                        <CloseIcon />
+                        <CloseIcon/>
                     </IconButton>
                 </DialogTitle>
                 <DialogContent dividers>
-                    <AddItemForm onSubmit={handleAddItem} />
+                    <AddItemForm onSubmit={handleAddItem}/>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setIsAddingItem(false)} color="secondary" variant="outlined" sx={{ marginRight: '8px' }}>
+                    <Button onClick={() => setIsAddingItem(false)} color="secondary" variant="outlined"
+                            sx={{marginRight: '8px'}}>
                         Cancel
                     </Button>
                 </DialogActions>
             </Dialog>
-            <ToastContainer />
+            <ToastContainer/>
         </NextUIProvider>
     );
 };
