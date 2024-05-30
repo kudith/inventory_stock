@@ -79,7 +79,7 @@ const AddItemForm = ({ onSubmit }) => {
 
 
   return (
-      <Box className="max-w-xl mx-auto rounded-md shadow-xl border-2 mt-20 overflow-hidden p-4">
+      <Box className="max-w-2xl mx-auto rounded-md shadow-xl border-2 overflow-hidden p-4">
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth margin="normal">
             <TextField

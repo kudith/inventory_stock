@@ -8,7 +8,7 @@ const navigation = [
     { name: 'Products', href: '#', icon: faArchive, subItems: [
             { name: 'Products', href: '/products', },
             { name: 'Product In', href: '/transaksi_masuk' },
-            { name: 'Product Out', href: '/product/out' },
+            { name: 'Product Out', href: '/transaksi_keluar_page' },
             { name: 'Stock', href: '/stock' }
         ]},
     { name: 'Suppliers', href: '/supplier_page', icon: faUsers },

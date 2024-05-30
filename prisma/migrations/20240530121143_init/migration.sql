@@ -190,28 +190,28 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Barang" ADD CONSTRAINT "Barang_id_supplier_fkey" FOREIGN KEY ("id_supplier") REFERENCES "Supplier"("id_supplier") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Barang" ADD CONSTRAINT "Barang_id_supplier_fkey" FOREIGN KEY ("id_supplier") REFERENCES "Supplier"("id_supplier") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Barang" ADD CONSTRAINT "Barang_id_kategori_fkey" FOREIGN KEY ("id_kategori") REFERENCES "Kategori"("id_kategori") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Barang" ADD CONSTRAINT "Barang_id_kategori_fkey" FOREIGN KEY ("id_kategori") REFERENCES "Kategori"("id_kategori") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Barang" ADD CONSTRAINT "Barang_id_merk_fkey" FOREIGN KEY ("id_merk") REFERENCES "Merk"("id_merk") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Barang" ADD CONSTRAINT "Barang_id_merk_fkey" FOREIGN KEY ("id_merk") REFERENCES "Merk"("id_merk") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Transaksi_Masuk" ADD CONSTRAINT "Transaksi_Masuk_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Transaksi_Masuk" ADD CONSTRAINT "Transaksi_Masuk_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Transaksi_Masuk" ADD CONSTRAINT "Transaksi_Masuk_id_supplier_fkey" FOREIGN KEY ("id_supplier") REFERENCES "Supplier"("id_supplier") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Transaksi_Keluar" ADD CONSTRAINT "Transaksi_Keluar_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Transaksi_Keluar" ADD CONSTRAINT "Transaksi_Keluar_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Detail_Stok" ADD CONSTRAINT "Detail_Stok_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Detail_Stok" ADD CONSTRAINT "Detail_Stok_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Stok_Rendah" ADD CONSTRAINT "Stok_Rendah_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Stok_Rendah" ADD CONSTRAINT "Stok_Rendah_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Reject" ADD CONSTRAINT "Reject_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Reject" ADD CONSTRAINT "Reject_id_barang_fkey" FOREIGN KEY ("id_barang") REFERENCES "Barang"("id_barang") ON DELETE CASCADE ON UPDATE CASCADE;

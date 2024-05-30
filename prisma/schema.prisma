@@ -93,9 +93,9 @@ model Barang {
   id_kategori   Int
   id_merk       Int
 
-  supplier         Supplier           @relation(fields: [id_supplier], references: [id_supplier])
-  kategori         Kategori           @relation(fields: [id_kategori], references: [id_kategori])
-  merk             Merk               @relation(fields: [id_merk], references: [id_merk])
+  supplier         Supplier           @relation(fields: [id_supplier], references: [id_supplier], onDelete: Cascade)
+  kategori         Kategori           @relation(fields: [id_kategori], references: [id_kategori], onDelete: Cascade)
+  merk             Merk               @relation(fields: [id_merk], references: [id_merk], onDelete: Cascade)
   Transaksi_Masuk  Transaksi_Masuk[]
   Transaksi_Keluar Transaksi_Keluar[]
   Detail_Stok      Detail_Stok[]
@@ -113,7 +113,7 @@ model Transaksi_Masuk {
   total_harga        Decimal
   catatan            String?
 
-  barang   Barang   @relation(fields: [id_barang], references: [id_barang])
+  barang   Barang   @relation(fields: [id_barang], references: [id_barang], onDelete: Cascade)
   supplier Supplier @relation(fields: [id_supplier], references: [id_supplier])
 }
 
@@ -126,7 +126,7 @@ model Transaksi_Keluar {
   total_harga         Decimal
   catatan             String?
 
-  barang Barang @relation(fields: [id_barang], references: [id_barang])
+  barang Barang @relation(fields: [id_barang], references: [id_barang], onDelete: Cascade)
 }
 
 model Detail_Stok {
@@ -138,7 +138,7 @@ model Detail_Stok {
   stok_keluar    Int
   stok_akhir     Int
 
-  barang Barang @relation(fields: [id_barang], references: [id_barang])
+  barang Barang @relation(fields: [id_barang], references: [id_barang], onDelete: Cascade)
 }
 
 model Stok_Rendah {
@@ -148,7 +148,7 @@ model Stok_Rendah {
   stok_sekarang  Int
   tanggal        DateTime
 
-  barang Barang @relation(fields: [id_barang], references: [id_barang])
+  barang Barang @relation(fields: [id_barang], references: [id_barang], onDelete: Cascade)
 }
 
 model Reject {
@@ -159,5 +159,5 @@ model Reject {
   alasan    String
   status    String
 
-  barang Barang @relation(fields: [id_barang], references: [id_barang])
+  barang Barang @relation(fields: [id_barang], references: [id_barang], onDelete: Cascade)
 }

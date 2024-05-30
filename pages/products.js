@@ -25,7 +25,6 @@ import InventApp from '../components/tables/inventApp';  // Pastikan path dan na
 import {NextUIProvider} from '@nextui-org/react';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import TransaksiMasukTable from "@/components/tables/TransaksiMasukTable";
 
 const Products = () => {
     const {data: session, status} = useSession();

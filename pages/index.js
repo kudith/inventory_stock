@@ -15,7 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     if (session) {
-      router.push('/dashboard');
+      router.push('/products');
     }
   }, [session]);
 
@@ -30,7 +30,7 @@ export default function Home() {
       if (result.error) {
         throw new Error('Invalid email or password.');
       }
-      router.push('/dashboard');
+      router.push('/products');
     } catch (error) {
       setError(error.message);
       setLoading(false);

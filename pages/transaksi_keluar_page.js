@@ -23,11 +23,11 @@ import InventApp from '../components/tables/inventApp';
 import { NextUIProvider } from '@nextui-org/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import TransaksiMasukTable from '@/components/tables/TransaksiMasukTable';
 import AddTransaksiMasukForm from '@/components/form/TransaksiMasukForm';
-import TransaksiKeluarTable from "@/components/tables/TansaksiKeluar"; // Ensure the path is correct
+import TransaksiKeluarTable from "@/components/tables/TansaksiKeluar";
+import TransaksiKeluarForm from "@/components/form/TransaksiKeluarForm"; // Ensure the path is correct
 
-const DashboardTransaksiMasuk = () => {
+const DashboardTransaksiKeluar = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -45,15 +45,11 @@ const DashboardTransaksiMasuk = () => {
         return res.data;
     });
 
-    const { data: transaksiMasukData, error: transaksiMasukError, isLoading: transaksiMasukLoading } = useQuery('transaksiMasuk', async () => {
-        const res = await axios.get('/api/transaksi_masuk');
+    const { data: transaksiKeluarData, error: transaksiKeluarError, isLoading: transaksiKeluarLoading } = useQuery('transaksiKeluar', async () => {
+        const res = await axios.get('/api/transaksi_keluar');
         return res.data;
     });
 
-    const { data: suppliers, error: suppliersError, isLoading: suppliersLoading } = useQuery('suppliers', async () => {
-        const res = await axios.get('/api/suppliers');
-        return res.data;
-    });
 
     if (status === 'loading' || status === 'unauthenticated') {
         return (
@@ -98,8 +94,8 @@ const DashboardTransaksiMasuk = () => {
                                 <>
                                 </>
                             )}
-                            <TransaksiMasukTable
-                                 data={transaksiMasukData}
+                            <TransaksiKeluarTable
+                                 data={transaksiKeluarData}
                                  onAddItemClick={handleAddItemClick}
                             />
                         </Grid>
@@ -121,7 +117,7 @@ const DashboardTransaksiMasuk = () => {
                 <DialogTitle
                     sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ccc' }}
                 >
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Tambah Transaksi Masuk</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Tambah Transaksi Keluar</Typography>
                     <IconButton
                         aria-label="close"
                         onClick={() => setIsAddingItem(false)}
@@ -134,11 +130,10 @@ const DashboardTransaksiMasuk = () => {
                 </DialogTitle>
                 <DialogContent>
                     {/* Ensure barangList and suppliers are loaded */}
-                    {barangList && suppliers ? (
-                        <AddTransaksiMasukForm
+                    {barangList ? (
+                        <TransaksiKeluarForm
                             open={isAddingItem}
                             onClose={() => setIsAddingItem(false)}
-                            suppliers={suppliers}
                             barangList={barangList}
                         />
                     ) : (
@@ -158,4 +153,4 @@ const DashboardTransaksiMasuk = () => {
     );
 };
 
-export default DashboardTransaksiMasuk;
+export default DashboardTransaksiKeluar;
