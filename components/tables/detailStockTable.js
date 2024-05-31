@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo, useCallback} from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import {
     Table,
     TableHeader,
@@ -15,12 +15,12 @@ import {
     Chip,
     Pagination,
 } from "@nextui-org/react";
-import {PlusIcon} from "../icons/PlusIcon";
-import {VerticalDotsIcon} from "../icons/vertical";
-import {SearchIcon} from "../icons/SearchIcon";
-import {ChevronDownIcon} from "../icons/chv";
-import {columns, statusOptions} from "../data/data";
-import {capitalize} from "/utils/utils";
+import { PlusIcon } from "../icons/PlusIcon";
+import { VerticalDotsIcon } from "../icons/vertical";
+import { SearchIcon } from "../icons/SearchIcon";
+import { ChevronDownIcon } from "../icons/chv";
+import { columns } from "../data/detailStockData";
+import { capitalize } from "/utils/utils";
 
 const statusColorMap = {
     available: "success",
@@ -28,15 +28,14 @@ const statusColorMap = {
     low_stock: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["id_barang", "nama", "stok", "harga", "merk", "kategori", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["id_detail_stok", "id_barang", "tanggal_update", "stok_awal", "stok_masuk", "stok_keluar", "stok_akhir", "actions"];
 
-const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
+const DetailStockTable = ({ data, onAddItemClick, onEditItemClick }) => {
     const [filterValue, setFilterValue] = useState("");
     const [selectedKeys, setSelectedKeys] = useState(new Set([]));
     const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
-    const [statusFilter, setStatusFilter] = useState(new Set(["all"]));
     const [rowsPerPage, setRowsPerPage] = useState(20);
-    const [sortDescriptor, setSortDescriptor] = useState({column: "id_barang", direction: "ascending"});
+    const [sortDescriptor, setSortDescriptor] = useState({ column: "id_detail_stok", direction: "ascending" });
     const [page, setPage] = useState(1);
     const [items, setItems] = useState(data);
 
@@ -54,16 +53,10 @@ const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
     const filteredItems = useMemo(() => {
         let filteredData = [...items];
         if (hasSearchFilter) {
-            filteredData = filteredData.filter((item) => item.nama.toLowerCase().includes(filterValue.toLowerCase()));
-        }
-        if (!statusFilter.has("all")) {
-            filteredData = filteredData.filter((item) => {
-                const stockStatus = item.stok > 10 ? "available" : item.stok > 0 ? "low_stock" : "out_of_stock";
-                return statusFilter.has(stockStatus);
-            });
+            filteredData = filteredData.filter((item) => item.id_barang.toLowerCase().includes(filterValue.toLowerCase()));
         }
         return filteredData;
-    }, [items, filterValue, statusFilter]);
+    }, [items, filterValue]);
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -82,18 +75,18 @@ const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
         });
     }, [sortDescriptor, paginatedItems]);
 
-    const handleDelete = useCallback(async (id_barang) => {
+    const handleDelete = useCallback(async (id_detail_stok) => {
         try {
-            const response = await fetch(`/api/barang`, {
+            const response = await fetch(`/api/detail_stok`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({id_barang}) // Mengirim id_barang sebagai bagian dari body
+                body: JSON.stringify({ id_detail_stok })
             });
 
             if (response.ok) {
-                setItems((prevItems) => prevItems.filter(item => item.id_barang !== id_barang));
+                setItems((prevItems) => prevItems.filter(item => item.id_detail_stok !== id_detail_stok));
             } else {
                 const errorData = await response.json();
                 console.error('Failed to delete item:', errorData);
@@ -103,59 +96,25 @@ const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
         }
     }, []);
 
-    const handleBatchDelete = useCallback(async () => {
-        const idsToDelete = Array.from(selectedKeys);
-        if (idsToDelete.length > 1 && !window.confirm('Are you sure you want to delete the selected items?')) {
-            return;
-        }
-        try {
-            const response = await fetch(`/api/barang`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ids: idsToDelete}),
-            });
-
-            if (response.ok) {
-                setItems((prevItems) => prevItems.filter(item => !idsToDelete.includes(item.id_barang)));
-                setSelectedKeys(new Set());
-            } else {
-                const errorData = await response.json();
-                console.error('Failed to delete items:', errorData);
-            }
-        } catch (error) {
-            console.error('An error occurred while deleting the items:', error);
-        }
-    }, [selectedKeys]);
-
     const renderCell = useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
         switch (columnKey) {
-            case "nama":
+            case "id_barang":
                 return <div>{cellValue}</div>;
-            case "harga":
-                return <div>{new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR'
-                }).format(cellValue)}</div>;
-            case "merk":
-            case "kategori":
-                return <div>{cellValue.nama}</div>;
-            case "stok":
-                return (
-                    <Chip
-                        color={statusColorMap[item.stok > 10 ? "available" : item.stok > 0 ? "low_stock" : "out_of_stock"]}>
-                        {cellValue}
-                    </Chip>
-                );
+            case "tanggal_update":
+                return <div>{new Date(cellValue).toLocaleDateString('id-ID')}</div>;
+            case "stok_awal":
+            case "stok_masuk":
+            case "stok_keluar":
+            case "stok_akhir":
+                return <div>{cellValue}</div>;
             case "actions":
                 return (
                     <div className="flex items-center gap-2">
                         <Button color="primary" onClick={() => onEditItemClick(item)}>
                             Edit
                         </Button>
-                        <Button color="error" onClick={() => handleDelete(item.id_barang)}>
+                        <Button color="error" onClick={() => handleDelete(item.id_detail_stok)}>
                             Delete
                         </Button>
                     </div>
@@ -204,67 +163,19 @@ const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
     const topContent = useMemo(() => {
         return (
             <div className="flex flex-wrap items-center gap-4 p-4 bg-white rounded-lg shadow-sm">
-                <span
-                    className="flex items-center text-default-400 text-sm ml-auto mr-4">Total {items.length} items</span>
+                <span className="flex items-center text-default-400 text-sm ml-auto mr-4">
+                    Total {items.length} items
+                </span>
                 <Input
                     isClearable
                     className="w-full sm:w-auto flex-grow"
-                    placeholder="Search by name..."
-                    startContent={<SearchIcon/>}
+                    placeholder="Search by ID Barang..."
+                    startContent={<SearchIcon />}
                     value={filterValue}
                     onClear={onClear}
                     onValueChange={onSearchChange}
                 />
-                <Dropdown>
-                    <DropdownTrigger>
-                        <Button endContent={<ChevronDownIcon className="text-small"/>} variant="flat">
-                            Status
-                        </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                        disallowEmptySelection
-                        aria-label="Table Columns"
-                        closeOnSelect={false}
-                        selectedKeys={statusFilter}
-                        selectionMode="multiple"
-                        onSelectionChange={setStatusFilter}
-                    >
-                        <DropdownItem key="all" className="capitalize">
-                            All
-                        </DropdownItem>
-                        <DropdownItem key="available" className="capitalize">
-                            Available
-                        </DropdownItem>
-                        <DropdownItem key="low_stock" className="capitalize">
-                            Low Stock
-                        </DropdownItem>
-                        <DropdownItem key="out_of_stock" className="capitalize">
-                            Out of Stock
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-                <Dropdown>
-                    <DropdownTrigger>
-                        <Button endContent={<ChevronDownIcon className="text-small"/>} variant="flat">
-                            Columns
-                        </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                        disallowEmptySelection
-                        aria-label="Table Columns"
-                        closeOnSelect={false}
-                        selectedKeys={visibleColumns}
-                        selectionMode="multiple"
-                        onSelectionChange={setVisibleColumns}
-                    >
-                        {columns.map((column) => (
-                            <DropdownItem key={column.uid} className="capitalize">
-                                {capitalize(column.name)}
-                            </DropdownItem>
-                        ))}
-                    </DropdownMenu>
-                </Dropdown>
-                <Button color="primary" onClick={onAddItemClick} startIcon={<PlusIcon/>}>
+                <Button color="primary" onClick={onAddItemClick} startIcon={<PlusIcon />}>
                     Add Item
                 </Button>
                 <div className="flex items-center text-default-400 text-sm ml-auto">
@@ -284,7 +195,7 @@ const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
                 </div>
             </div>
         );
-    }, [filterValue, statusFilter, visibleColumns, onRowsPerPageChange, items.length, onSearchChange, hasSearchFilter]);
+    }, [filterValue, visibleColumns, onRowsPerPageChange, items.length, onSearchChange, hasSearchFilter]);
 
     const bottomContent = useMemo(() => {
         return (
@@ -321,7 +232,7 @@ const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
             isHeaderSticky
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
-            classNames={{wrapper: "max-h-[500px] overflow-auto"}}
+            classNames={{ wrapper: "max-h-[500px] overflow-auto" }}
             selectedKeys={selectedKeys}
             selectionMode="multiple"
             sortDescriptor={sortDescriptor}
@@ -343,7 +254,7 @@ const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
             </TableHeader>
             <TableBody emptyContent={"No items found"} items={sortedItems}>
                 {(item) => (
-                    <TableRow key={item.id_barang}>
+                    <TableRow key={item.id_detail_stok}>
                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                     </TableRow>
                 )}
@@ -352,4 +263,4 @@ const InventApp = ({data, onAddItemClick, onEditItemClick}) => {
     );
 };
 
-export default InventApp;
+export default DetailStockTable;

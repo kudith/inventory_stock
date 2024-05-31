@@ -9,7 +9,7 @@ const navigation = [
             { name: 'Products', href: '/products', },
             { name: 'Product In', href: '/transaksi_masuk' },
             { name: 'Product Out', href: '/transaksi_keluar_page' },
-            { name: 'Stock', href: '/stock' }
+            { name: 'Stock', href: '/detail_stock_page' }
         ]},
     { name: 'Suppliers', href: '/supplier_page', icon: faUsers },
     { name: 'Rejected', href: '/rejected', icon: faExclamation },

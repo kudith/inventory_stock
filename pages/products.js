@@ -20,8 +20,9 @@ import {Add as AddIcon, Close as CloseIcon} from '@mui/icons-material';
 import Sidebar from '../components/Sidebar';
 import DashboardHeader from '../components/DashboardHeader';
 import {ErrorOutline as ErrorOutlineIcon} from '@mui/icons-material';
-import AddItemForm from '../components/form/AddItemFom';  // Pastikan path dan nama file benar
-import InventApp from '../components/tables/inventApp';  // Pastikan path dan nama file benar
+import AddItemForm from '../components/form/AddItemFom';
+import EditProductForm from '../components/form/EditProductForm'; // Corrected import
+import InventApp from '../components/tables/inventApp';
 import {NextUIProvider} from '@nextui-org/react';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,6 +33,8 @@ const Products = () => {
     const queryClient = useQueryClient();
 
     const [isAddingItem, setIsAddingItem] = useState(false);
+    const [isEditingItem, setIsEditingItem] = useState(false);
+    const [currentItem, setCurrentItem] = useState(null);
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -43,8 +46,6 @@ const Products = () => {
         const res = await axios.get('/api/barang');
         return res.data;
     });
-
-
 
     const addItemMutation = useMutation(
         async (newItem) => {
@@ -59,10 +60,29 @@ const Products = () => {
             },
             onError: (error) => {
                 console.error('Error adding item:', error);
-                // toast.error('Gagal menambahkan barang. Silakan coba lagi.');
             },
         }
     );
+
+    const editItemMutation = useMutation(
+        async (updatedItem) => {
+            const {id_barang, ...data} = updatedItem;
+            console.log(`Sending PUT request to /api/barang/${id_barang}`, data);
+            const res = await axios.put(`/api/barang/${id_barang}`, data);
+            return res.data;
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('barang');
+                refetch();
+                toast.success('Barang berhasil diperbarui');
+            },
+            onError: (error) => {
+                console.error('Error updating item:', error.response?.data || error.message);
+            },
+        }
+    );
+
 
     const handleAddItem = async (itemData) => {
         try {
@@ -71,6 +91,22 @@ const Products = () => {
         } catch (error) {
             console.error('Error adding item:', error);
         }
+    };
+
+    const handleEditItem = async (itemData) => {
+        try {
+            await editItemMutation.mutateAsync(itemData);
+            setIsEditingItem(false);
+            setCurrentItem(null);
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
+    };
+
+
+    const handleEditItemClick = (item) => {
+        setCurrentItem(item);
+        setIsEditingItem(true);
     };
 
     if (status === 'loading' || status === 'unauthenticated') {
@@ -104,12 +140,11 @@ const Products = () => {
                                     <ErrorOutlineIcon className="ml-1"/>
                                 </Box>
                             ) : (
-                                <>
-                                    <InventApp
-                                        data={data}
-                                        onAddItemClick={() => setIsAddingItem(true)}  // Pass handler to InventApp
-                                    />
-                                </>
+                                <InventApp
+                                    data={data}
+                                    onAddItemClick={() => setIsAddingItem(true)}
+                                    onEditItemClick={handleEditItemClick}
+                                />
                             )}
                         </Grid>
                     </Grid>
@@ -127,15 +162,19 @@ const Products = () => {
                     },
                 }}
             >
-                <DialogTitle sx={{
-                    m: 0,
-                    p: 2,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    borderBottom: '1px solid #ccc'
-                }}>
-                    <Typography variant="h6" sx={{fontWeight: 'bold'}}>Add New Item</Typography>
+                <DialogTitle
+                    sx={{
+                        m: 0,
+                        p: 2,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        borderBottom: '1px solid #ccc',
+                    }}
+                >
+                    <Typography variant="h6" sx={{fontWeight: 'bold'}}>
+                        Add New Item
+                    </Typography>
                     <IconButton onClick={() => setIsAddingItem(false)}>
                         <CloseIcon/>
                     </IconButton>
@@ -144,12 +183,22 @@ const Products = () => {
                     <AddItemForm onSubmit={handleAddItem}/>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setIsAddingItem(false)} color="secondary" variant="outlined"
-                            sx={{marginRight: '8px'}}>
+                    <Button
+                        onClick={() => setIsAddingItem(false)}
+                        color="secondary"
+                        variant="outlined"
+                        sx={{marginRight: '8px'}}
+                    >
                         Cancel
                     </Button>
                 </DialogActions>
             </Dialog>
+            <EditProductForm
+                open={isEditingItem}
+                item={currentItem}
+                onEdit={handleEditItem}
+                onClose={() => setIsEditingItem(false)}
+            />
             <ToastContainer/>
         </NextUIProvider>
     );
