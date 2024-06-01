@@ -12,7 +12,7 @@ const navigation = [
             { name: 'Stock', href: '/detail_stock_page' }
         ]},
     { name: 'Suppliers', href: '/supplier_page', icon: faUsers },
-    { name: 'Rejected', href: '/rejected', icon: faExclamation },
+    { name: 'Rejected', href: '/reject_page', icon: faExclamation },
 ];
 
 const Sidebar = () => {

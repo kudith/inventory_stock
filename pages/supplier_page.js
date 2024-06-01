@@ -138,7 +138,9 @@ const SupplierPage = () => {
                                     onEditItemClick={handleEditItemClick}
                                 />
                             )}
+
                         </Grid>
+
                     </Grid>
                 </Container>
             </div>
