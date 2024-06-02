@@ -48,19 +48,19 @@ const AddTransaksiMasukForm = ({ open, onClose, suppliers, barangList }) => {
         const tanggal = new Date().toISOString();
 
         try {
-            // Tambahkan transaksi masuk
+
             const response = await axios.post('/api/transaksi_masuk', {
                 nama_barang: barang.nama,
                 tanggal,
                 harga_satuan: parseFloat(hargaSatuan),
                 jumlah: parseInt(jumlah),
                 total_harga: parseFloat(totalHarga),
-                catatan: '', // tambahkan catatan jika diperlukan
+                catatan: '',
             });
 
             // Perbarui stok barang
             await axios.put(`/api/barang/${barang.id_barang}`, {
-                stok: barang.stok + parseInt(jumlah), // Tambah stok baru dengan jumlah yang dimasukkan
+                stok: barang.stok + parseInt(jumlah),
                 harga: parseFloat(hargaSatuan),
                 tanggal_masuk: tanggal,
             });

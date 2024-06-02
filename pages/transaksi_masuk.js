@@ -82,6 +82,9 @@ const DashboardTransaksiMasuk = () => {
                 <DashboardHeader />
                 <Container className="flex-1 mx-auto my-20">
                     <Grid container justifyContent="center" alignItems="center" spacing={2}>
+                        <div>
+                            <h1 className="text-3xl font-bold">Product-in</h1>
+                        </div>
                         <Grid item xs={12}>
                             {barangLoading ? (
                                 <Box className="flex justify-center items-center h-60">

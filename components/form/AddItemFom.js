@@ -71,7 +71,6 @@ const AddItemForm = ({ onSubmit }) => {
       });
       toast.success('Barang berhasil ditambahkan');
     } else {
-      toast.error('Gagal menambahkan barang');
     }
   };
 
@@ -167,7 +166,6 @@ const AddItemForm = ({ onSubmit }) => {
             required
           />
         </FormControl>
-        {/* Tambahkan input hidden untuk tanggal masuk */}
         <input type="hidden" name="tanggal_masuk" value={formData.tanggal_masuk} />
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Tambah Barang

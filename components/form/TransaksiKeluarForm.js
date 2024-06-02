@@ -62,7 +62,7 @@ const AddTransaksiKeluarForm = ({ open, onClose, suppliers, barangList }) => {
 
             // Update barang stock
             await axios.put(`/api/barang/${barang.id_barang}`, {
-                stok: barang.stok - parseInt(jumlah), // Subtract the new stock with the input quantity
+                stok: barang.stok - parseInt(jumlah),
                 harga: parseFloat(hargaSatuan),
                 tanggal_keluar: tanggal,
             });
@@ -104,7 +104,6 @@ const AddTransaksiKeluarForm = ({ open, onClose, suppliers, barangList }) => {
                                 onChange={(event, newValue) => {
                                     setBarang(newValue);
                                     if (newValue) {
-                                        // Set harga satuan based on selected barang's harga
                                         setHargaSatuan(newValue.harga);
                                     }
                                 }}

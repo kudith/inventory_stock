@@ -127,6 +127,9 @@ const Products = () => {
                 <DashboardHeader/>
                 <Container className="flex-1 mx-auto my-20">
                     <Grid container justifyContent="center" alignItems="center" spacing={2}>
+                        <div className="flex">
+                            <h1 className="text-3xl font-bold">Products</h1>
+                        </div>
                         <Grid item xs={12}>
                             {isLoading ? (
                                 <Box className="flex justify-center items-center h-60">

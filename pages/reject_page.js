@@ -2,7 +2,7 @@ import {useSession} from 'next-auth/react';
 import {useQuery, useMutation, useQueryClient} from 'react-query';
 import {useRouter} from 'next/router';
 import axios from 'axios';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     CircularProgress,
@@ -130,6 +130,11 @@ const Rejects = () => {
                 <DashboardHeader/>
                 <Container className="flex-1 mx-auto my-20">
                     <Grid container justifyContent="center" alignItems="center" spacing={2}>
+                        <div>
+                            <h1 className="text-3xl font-bold">
+                                Rejected
+                            </h1>
+                        </div>
                         <Grid item xs={12}>
                             {isLoading ? (
                                 <Box className="flex justify-center items-center h-60">

@@ -118,17 +118,22 @@ const SupplierPage = () => {
                 <DashboardHeader />
                 <Container className="flex-1 mx-auto my-20">
                     <Grid container justifyContent="center" alignItems="center" spacing={2}>
+                        <div>
+                            <h1 className="text-3xl font-bold">
+                                Suppliers
+                            </h1>
+                        </div>
                         <Grid item xs={12}>
                             {supplierLoading ? (
                                 <Box className="flex justify-center items-center h-60">
-                                    <CircularProgress />
+                                    <CircularProgress/>
                                 </Box>
                             ) : supplierError ? (
                                 <Box className="flex justify-center items-center h-60">
                                     <Typography variant="h6" color="error">
                                         Error loading suppliers
                                     </Typography>
-                                    <ErrorOutlineIcon className="ml-1" />
+                                    <ErrorOutlineIcon className="ml-1"/>
                                 </Box>
                             ) : (
                                 <SuppliersTable

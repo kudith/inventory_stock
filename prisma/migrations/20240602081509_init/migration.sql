@@ -127,10 +127,10 @@ CREATE TABLE "Transaksi_Keluar" (
 CREATE TABLE "Detail_Stok" (
     "id_detail_stok" SERIAL NOT NULL,
     "id_barang" INTEGER NOT NULL,
-    "tanggal_update" TIMESTAMP(3) NOT NULL,
+    "tanggal_update" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "stok_awal" INTEGER NOT NULL,
-    "stok_masuk" INTEGER NOT NULL,
-    "stok_keluar" INTEGER NOT NULL,
+    "stok_masuk" INTEGER NOT NULL DEFAULT 0,
+    "stok_keluar" INTEGER NOT NULL DEFAULT 0,
     "stok_akhir" INTEGER NOT NULL,
 
     CONSTRAINT "Detail_Stok_pkey" PRIMARY KEY ("id_detail_stok")

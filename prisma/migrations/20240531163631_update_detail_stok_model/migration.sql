@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "Detail_Stok" ALTER COLUMN "tanggal_update" SET DEFAULT CURRENT_TIMESTAMP,
-ALTER COLUMN "stok_masuk" SET DEFAULT 0,
-ALTER COLUMN "stok_keluar" SET DEFAULT 0;
