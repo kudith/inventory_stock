@@ -2,7 +2,21 @@
 
 ## Introduction
 
-Inventory Management System is a web-based application built with Next JS, Prisma ORM and PosrgreSQL. It provides an efficient way to manage inventory, including products, suppliers, and stock details.
+Inventory Management System is a web-based application built with Next JS, Prisma ORM and PosrgreSQL. It provides an
+efficient way to manage inventory, including products, suppliers, and stock details.
+
+## About Project
+
+This project is required to fulfill the final project of the Database course at the Siliwangi University. The project is
+built by a team of five students.
+
+## Team
+
+- **[Ginanjar Aditiya Prianata]**   [Developed this project & designed the ERD]
+- **[Farid Firdaus]**   [Created the activity diagram]
+- **[Muhammad Rizki]**   [Created the class diagram and data dictionary]
+- **[Haifa Celeryn]**   [Researched and collected references]
+- **[Muhammad Akbar Hidayatullah]**  [Created the project mockup]
 
 ## Features
 
@@ -11,7 +25,7 @@ Inventory Management System is a web-based application built with Next JS, Prism
 - Supplier Management: Add, update, delete, and view suppliers.
 - Stock Management: Monitor stock levels, add new stock, update or delete existing stock.
 
-## Installation
+## How to Start
 
 1. Clone the repository
 2. Navigate to the project directory
@@ -20,14 +34,5 @@ Inventory Management System is a web-based application built with Next JS, Prism
 
 ## Usage
 
-Open `http://localhost:3000` in your browser to view the application.
+Open `http://localhost:3000` in browser to view the application.
 
-## About Project
-This project is required to fulfill the final project of the Database course at the Siliwangi University. The project is built by a team of five students.
-
-## Team
-- [Ginanjar Aditiya Prianata]
-- [Farid Firdaus]
-- [Muhammad Rizki]
-- [Haifa Celeryn]
-- [Muhammad Akbar Hidayatullah]
