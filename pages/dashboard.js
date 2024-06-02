@@ -1,107 +1,53 @@
-import { useSession } from 'next-auth/react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { useRouter } from 'next/router';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Box, CircularProgress, Container, Typography, Grid, Button } from '@mui/material';
+import React from 'react';
+import {Box, Card, CardHeader, CardContent, Typography} from '@mui/material';
+import {NextUIProvider} from '@nextui-org/react';
 import Sidebar from '../components/Sidebar';
-import DashboardHeader from '../components/DashboardHeader'; 
-import InventoryTable from '../components/InventoryTable';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import AddItemForm from '../components/AddItemFom';
+import DashboardHeader from '../components/DashboardHeader';
+import Link from 'next/link';
 
 const Dashboard = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const queryClient = useQueryClient();
+    const cards = [
+        {title: 'Users', count: 1, link: '/users', bgColor: 'bg-blue-500'},
+        {title: 'Product', count: 2, link: '/products', bgColor: 'bg-green-500'},
+        {title: 'Supplier', count: 2, link: '/supplier_page', bgColor: 'bg-yellow-500'},
+        {title: 'Stock', count: 2, link: '/detail_stock_page', bgColor: 'bg-red-500'},
+        {title: 'Product In', count: 2, link: '/transaksi_masuk', bgColor: 'bg-blue-300'},
+        {title: 'Product Out', count: 2, link: '/transaksi_keluar_page', bgColor: 'bg-red-700'},
+        {title: 'Rejected', count: 1, link: '/reject_page', bgColor: 'bg-gray-400'},
+    ];
 
-  const [isAddingItem, setIsAddingItem] = useState(false);
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
-    }
-  }, [status, router]);
-
-  const { data, error, isLoading } = useQuery('barang', async () => {
-    const res = await axios.get('/api/barang');
-    return res.data;
-  });
-
-  const mutation = useMutation(
-    async (newItem) => {
-      const res = await axios.post('/api/barang', newItem);
-      return res.data;
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('barang');
-      },
-      onError: (error) => {
-        console.error('Error adding item:', error);
-      },
-    }
-  );
-
-  const handleAddItem = async (itemData) => {
-    try {
-      await mutation.mutateAsync(itemData);
-      setIsAddingItem(false);
-    } catch (error) {
-      console.error('Error adding item:', error);
-    }
-  };
-
-  if (status === 'loading' || status === 'unauthenticated') {
     return (
-      <div className="flex min-h-screen">
-        <Sidebar />
-        <div className="flex-1 flex justify-center items-center">
-          <CircularProgress />
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <DashboardHeader />
-        <Container className="flex-1 mx-auto my-8">
-          {isAddingItem ? (
-            <div className="mb-4">
-              <AddItemForm onSubmit={handleAddItem} />
+        <NextUIProvider>
+            <div className="flex">
+                <Sidebar/>
+                <div className="flex-1 flex flex-col">
+                    <DashboardHeader/>
+                    <Box className="flex flex-wrap max-w-7xl mx-auto gap-10 justify-center mt-20">
+                        {cards.map((card, index) => (
+                            <Link href={card.link} key={index} passHref>
+                                <span className="no-underline">
+                                    <Card
+                                        className={`w-72 h-48 p-2 rounded-lg shadow-xl transition-transform duration-200 hover:scale-105 ${card.bgColor}`}
+                                    >
+                                        <CardHeader
+                                            className="pb-0 pt-2 pl-4 flex flex-col items-start"
+                                            title={<Typography variant="subtitle1"
+                                                               className="text-white text-3xl font-bold uppercase">{card.title}</Typography>}
+                                            subheader={<Typography variant="subtitle2"
+                                                                   className="text-white">{card.count}</Typography>}
+                                        />
+                                        <CardContent className="pt-2 flex justify-center items-center">
+                                            <span className="text-white font-bold mt-4 hover:underline">More Info</span>
+                                        </CardContent>
+                                    </Card>
+                                </span>
+                            </Link>
+                        ))}
+                    </Box>
+                </div>
             </div>
-          ) : (
-            <Grid container justifyContent="center" alignItems="center" spacing={2}>
-              <Grid item xs={12}>
-                {isLoading ? (
-                  <Box className="flex justify-center items-center h-60">
-                    <CircularProgress />
-                  </Box>
-                ) : error ? (
-                  <Box className="flex justify-center items-center h-60">
-                    <Typography variant="h6" color="error">
-                      Error loading inventory
-                    </Typography>
-                    <ErrorOutlineIcon className="ml-1" />
-                  </Box>
-                ) : (
-                  <>
-                    <Button onClick={() => setIsAddingItem(true)} variant="contained" color="primary" className="mb-8">
-                      Add Item
-                    </Button>
-                    <InventoryTable items={data} />
-                  </>
-                )}
-              </Grid>
-            </Grid>
-          )}
-        </Container>
-      </div>
-    </div>
-  );
+        </NextUIProvider>
+    );
 };
 
 export default Dashboard;

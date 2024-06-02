@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function createDummyData() {
   try {
     // Membuat data dummy untuk model Supplier
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
       await prisma.supplier.create({
         data: {
           nama: faker.company.name(),

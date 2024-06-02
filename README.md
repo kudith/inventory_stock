@@ -1,73 +1,33 @@
-# Inventory App Next.js
+# Inventory Management System
 
-Ini adalah proyek [Next.js](https://nextjs.org/) yang dibuat dengan [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Introduction
 
-## Start
+Inventory Management System is a web-based application built with Next JS, Prisma ORM and PosrgreSQL. It provides an efficient way to manage inventory, including products, suppliers, and stock details.
 
-### Prequest
+## Features
 
-Pastikan Anda telah menginstal:
+- User Management: Register, login, and manage user profiles.
+- Product Management: Add, update, delete, and view products.
+- Supplier Management: Add, update, delete, and view suppliers.
+- Stock Management: Monitor stock levels, add new stock, update or delete existing stock.
 
-- Node.js (disarankan: versi LTS terbaru)
-- npm, yarn, pnpm, atau bun (pilih salah satu pengelola paket)
+## Installation
 
-### Install
+1. Clone the repository
+2. Navigate to the project directory
+3. Install the dependencies: `npm install` or `npm install --legacy-peer-deps`
+4. Start the server: `npm run dev`
 
-Pertama, kloning repositori:
+## Usage
 
-```bash
-git clone https://github.com/username/inventory_stock.git
-cd inventory_stock
-```
+Open `http://localhost:3000` in your browser to view the application.
 
-install dependensi:
+## About Project
+This project is required to fulfill the final project of the Database course at the Siliwangi University. The project is built by a team of five students.
 
-```bash
-npm install
-# atau
-yarn install
-# atau
-pnpm install
-# atau
-bun install
-```
-
-### Menjalankan Server di localhost
-
-Setelah menginstal dependensi, jalankan server pengembangan:
-
-```bash
-npm run dev
-# atau
-yarn dev
-# atau
-pnpm dev
-# atau
-bun dev
-```
-
-Buka [http://localhost:3000](http://localhost:3000) dengan browser Anda untuk melihat hasilnya.
-
-### Rute API
-
-Rute API dapat diakses di [http://localhost:3000/api/hello](http://localhost:3000/api/hello). Endpoint ini dapat diedit di `pages/api/hello.js`.
-
-Direktori `pages/api` dipetakan ke `/api/*`. File dalam direktori ini diperlakukan sebagai [rute API](https://nextjs.org/docs/api-routes/introduction) alih-alih halaman React.
-
-Proyek ini menggunakan [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) untuk mengoptimalkan dan memuat Inter, font khusus dari Google secara otomatis.
-
-## Pelajari Lebih Lanjut
-
-Untuk mempelajari lebih lanjut tentang Next.js, lihat sumber daya berikut:
-
-- [Dokumentasi Next.js](https://nextjs.org/docs) - pelajari tentang fitur dan API Next.js.
-- [Belajar Next.js](https://nextjs.org/learn) - tutorial interaktif Next.js.
-
-Anda dapat memeriksa [repositori GitHub Next.js](https://github.com/vercel/next.js/) - umpan balik dan kontribusi Anda diterima!
-
-## Menerapkan di Vercel
-
-Cara termudah untuk menerapkan aplikasi Next.js Anda adalah menggunakan [Platform Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) dari pembuat Next.js.
-
-Lihat [dokumentasi penerapan Next.js](https://nextjs.org/docs/deployment) kami untuk detail lebih lanjut.
-
+## Team
+- [Ginanjar Aditiya Prianata]
+- [Farid Firdaus]
+- [Muhammad Rizki]
+- [Haifa Celeryn]
+- [Muhammad Akbar Hidayatullah]

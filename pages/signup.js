@@ -13,22 +13,38 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
+
     if (password !== confirmPassword) {
       setError("Passwords don't match.");
       return;
     }
 
     try {
-      const existingUser = await axios.get(`/api/auth/user?email=${email}`);
+      // Check if the user already exists
+      const existingUser = await axios.get(`/api/auth/user`, { params: { email } });
       if (existingUser.data) {
         setError('Email is already registered.');
         return;
       }
 
+      // Sign up the user
       await axios.post('/api/auth/signup', { name, email, password });
+
+      // Sign in the user
       await signIn('credentials', { email, password });
-    } catch (error) {
-      setError('Failed to sign up. Please try again later.');
+    } catch (err) {
+      // Enhanced error handling to capture specific issues
+      if (err.response) {
+        // Server responded with a status other than 2xx
+        setError(`Error: ${err.response.data.message}`);
+      } else if (err.request) {
+        // Request was made but no response was received
+        setError('Error: No response from the server.');
+      } else {
+        // Something else happened
+        setError(`Error: ${err.message}`);
+      }
     }
   };
 

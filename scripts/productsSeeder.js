@@ -10,12 +10,12 @@ async function createDummyData() {
         data: {
           kode: faker.string.sample(5), // Menggunakan faker untuk menghasilkan kode barang UUID
           nama: faker.commerce.product(), // Menggunakan faker untuk menghasilkan nama produk acak
-          id_supplier: faker.number.int({ min: 1, max: 10 }), // Menggunakan faker untuk menghasilkan ID supplier acak
+          id_supplier: faker.number.int({ min: 1, max: 5 }), // Menggunakan faker untuk menghasilkan ID supplier acak
           stok: faker.number.int(100), // Menggunakan faker untuk menghasilkan jumlah stok acak
           harga: faker.finance.accountNumber(), // Menggunakan faker untuk menghasilkan harga acak
           tanggal_masuk: faker.date.anytime(),
-          id_kategori: faker.number.int({ min: 3, max: 5 }), // Menggunakan faker untuk menghasilkan ID kategori acak
-          id_merk: faker.number.int({ min: 1, max: 10 }), // Menggunakan faker untuk menghasilkan ID merk acak
+          id_kategori: faker.number.int({ min: 1, max: 7 }), // Menggunakan faker untuk menghasilkan ID kategori acak
+          id_merk: faker.number.int({ min: 1, max: 5 }), // Menggunakan faker untuk menghasilkan ID merk acak
         },
       });
     }
