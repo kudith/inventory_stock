@@ -1,5 +1,10 @@
 # Inventory Management System
 
+##
+# **[ This project is still in development ! ]**
+
+
+## 
 ## Introduction
 
 Inventory Management System is a web-based application built with Next JS, Prisma ORM and PosrgreSQL. It provides an
